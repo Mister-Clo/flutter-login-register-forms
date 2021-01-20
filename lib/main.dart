@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_requests/pages/login.dart';
+import 'package:http_requests/wrapper.dart';
 
 Future<Album> fetchAlbum() async {
   final response =
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Login(),
+      home: Wrapper(),
       /*Scaffold(
         appBar: AppBar(
           title: Text('Fetch Data Example'),

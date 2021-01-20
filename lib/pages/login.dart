@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http_requests/home.dart';
+import 'package:http_requests/model/userModel.dart';
 import 'package:http_requests/pages/register.dart';
 import 'package:http_requests/services/authService.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -15,11 +18,12 @@ class _LoginState extends State<Login> {
  bool connected = false;
  void login() async{
    if(_key.currentState.validate()){
-
        final response =  await AuthService.login(email.text, password.text);
        if(response["statut"]==1){
+         await UserModel.saveUser(UserModel.fromJson(response));
          connected = true;
          message = response["message"];
+         Navigator.of(context).push(MaterialPageRoute(builder: (g)=> Home()));
          setState(() {});
        }else{
          connected = false;
@@ -66,7 +70,7 @@ class _LoginState extends State<Login> {
                   validator: (e)=>e.isEmpty?"Veuillez entrer le mot de passe":null,
                   controller: password,
                   style: TextStyle(fontSize: 20),
-                  obscureText: true,
+                  obscureText: visible,
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(15),
                       prefixIcon: Padding(
@@ -75,6 +79,13 @@ class _LoginState extends State<Login> {
                           Icons.vpn_key,
                           size: 30,
                         ),
+                      ),
+                      suffixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: IconButton(
+                          icon: visible ? FaIcon(FontAwesomeIcons.eye,size: 25,) : FaIcon(FontAwesomeIcons.eyeSlash,size: 25,) ,
+                          onPressed: toggle_password,
+                        )
                       ),
                       labelText: 'Password',
                       hintText: "Mot de passe"),
@@ -119,5 +130,12 @@ class _LoginState extends State<Login> {
         )
       ))),
     );
+  }
+  bool visible = true;
+  void toggle_password(){
+   visible = !visible;
+   setState(() {
+
+   });
   }
 }
