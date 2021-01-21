@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http_requests/model/userModel.dart';
 import 'package:http_requests/pages/login.dart';
+import 'package:http_requests/services/authService.dart';
+
+import '../home.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -13,9 +18,34 @@ class _RegisterState extends State<Register> {
   TextEditingController numero_inscription = new TextEditingController();
   TextEditingController password_inscription = new TextEditingController();
   final _key = GlobalKey<FormState>();
-  void register(){
-    if(_key.currentState.validate()){
+  String message = "";
+  bool registered = false;
 
+  ///la fonction login appelle la fonction de L'api d'inscription
+  ///register
+  void register() async{
+    if(_key.currentState.validate()){
+      print(email_inscription.text);
+      print(nom_inscription.text);
+      print(prenom_inscription.text);
+      print(numero_inscription.text);
+      print(password_inscription.text);
+
+      final response = await AuthService.register(
+          nom_inscription.text,prenom_inscription.text,
+          email_inscription.text,numero_inscription.text,
+          password_inscription.text);
+      if(response["statut"]==1){
+        await UserModel.saveUser(UserModel.fromJson(response));
+        registered = true;
+        message = response["message"];
+        Navigator.of(context).push(MaterialPageRoute(builder: (g)=> Home()));
+        setState(() {});
+      }else{
+        registered = false;
+        message = response["message"];
+        setState(() {});
+      }
     }
   }
 
@@ -31,10 +61,11 @@ class _RegisterState extends State<Register> {
                     key: _key,
                     child: Column(
                       children: [
-                        Image(image: AssetImage('images/add-user.png'),width: 150,),
+                        Image(image: AssetImage('images/add-user.png'),width: 150),
                         Card(
                           child: TextFormField(
                             validator: (e)=>e.isEmpty?"Veuillez entrer le nom":null,
+                            controller: nom_inscription,
                             style: TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(15),
@@ -53,6 +84,7 @@ class _RegisterState extends State<Register> {
                         Card(
                           child: TextFormField(
                             validator: (e)=>e.isEmpty?"Veuillez entrer le prénom":null,
+                            controller: prenom_inscription,
                             style: TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(15),
@@ -71,6 +103,7 @@ class _RegisterState extends State<Register> {
                         Card(
                           child: TextFormField(
                             validator: (e)=>e.isEmpty?"Veuillez entrer l'email":null,
+                            controller: email_inscription,
                             style: TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(15),
@@ -83,12 +116,13 @@ class _RegisterState extends State<Register> {
                                 ),
                                 labelText: 'Email',
                                 hintText: "e-mail"),
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.emailAddress,
                           ),
                         ),
                         Card(
                           child: TextFormField(
                             validator: (e)=>e.isEmpty?"Veuillez entrer le numéro":null,
+                            controller: numero_inscription,
                             style: TextStyle(fontSize: 20),
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(15),
@@ -107,8 +141,9 @@ class _RegisterState extends State<Register> {
                         Card(
                           child: TextFormField(
                             validator: (e)=>e.isEmpty?"Veuillez entrer le mot de passe":null,
+                            controller: password_inscription,
                             style: TextStyle(fontSize: 20),
-                            obscureText: true,
+                            obscureText: visible,
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(15),
                                 prefixIcon: Padding(
@@ -118,11 +153,19 @@ class _RegisterState extends State<Register> {
                                     size: 30,
                                   ),
                                 ),
+                                suffixIcon: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: IconButton(
+                                      icon: visible ? FaIcon(FontAwesomeIcons.eye,size: 25,) : FaIcon(FontAwesomeIcons.eyeSlash,size: 25,) ,
+                                      onPressed: toggle_password,
+                                    )
+                                ),
                                 labelText: 'Password',
                                 hintText: "Mot de passe"),
                             keyboardType: TextInputType.text,
                           ),
                         ),
+                        Text("$message", style: TextStyle(color: registered ? Colors.greenAccent : Colors.redAccent),),
                         SizedBox(
                           height: 44,
                           child: RaisedButton(onPressed: register,
@@ -154,5 +197,12 @@ class _RegisterState extends State<Register> {
                   )
               ))),
     );
+  }
+  bool visible = true;
+  ///la fonction toggle_password permet de basculer l'icône
+  ///de visibilité de mot de passe au clic
+  void toggle_password(){
+    visible = !visible;
+    setState(() {});
   }
 }

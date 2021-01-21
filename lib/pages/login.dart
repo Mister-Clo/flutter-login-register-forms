@@ -11,11 +11,16 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  ///les TextEditingControllers sont des objets qui contiennent
+  ///les valeurs des champs TextFormField
  TextEditingController email = new TextEditingController();
  TextEditingController password = new TextEditingController();
  final _key = GlobalKey<FormState>();
  String message = "";
  bool connected = false;
+
+ ///la fonction login appelle la fonction de L'api de connexion
+ ///login
  void login() async{
    if(_key.currentState.validate()){
        final response =  await AuthService.login(email.text, password.text);
@@ -62,7 +67,7 @@ class _LoginState extends State<Login> {
                       ),
                       labelText: 'Email',
                       hintText: "e-mail"),
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.emailAddress,
                 ),
               ),
               Card(
@@ -132,10 +137,10 @@ class _LoginState extends State<Login> {
     );
   }
   bool visible = true;
+ ///la fonction toggle_password permet de basculer l'icône
+ ///de visibilité de mot de passe au clic
   void toggle_password(){
    visible = !visible;
-   setState(() {
-
-   });
+   setState(() {});
   }
 }

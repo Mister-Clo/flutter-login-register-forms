@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_requests/pages/login.dart';
 import 'package:http_requests/wrapper.dart';
 
-Future<Album> fetchAlbum() async {
+/*Future<Album> fetchAlbum() async {
   final response =
   await http.get('https://jsonplaceholder.typicode.com/todos/1');
 
@@ -20,7 +20,7 @@ Future<Album> fetchAlbum() async {
     throw Exception('Failed to load album');
   }
 }
-
+*/
 class Album {
   final int userId;
   final int id;
@@ -49,11 +49,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future<Album> futureAlbum;
 
-  @override
+  /*@override
   void initState() {
     super.initState();
     futureAlbum = fetchAlbum();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
