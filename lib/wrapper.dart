@@ -11,33 +11,37 @@ class Wrapper extends StatefulWidget {
 class _WrapperState extends State<Wrapper> {
   UserModel user;
 
-  getUser() async{
+  getUser() async {
     final data = await UserModel.getUser();
-    if(data!=null){
+    if (data != null) {
       user = data;
-    }else{
+      setState(() {});
+    } else {
       user = UserModel();
+      setState(() {});
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUser();
   }
+
   @override
   Widget build(BuildContext context) {
-    if(user == null){
+    if (user == null) {
       return Container(
         color: Colors.white,
         child: Center(
           child: CircularProgressIndicator(),
         ),
       );
-    }else{
-      if(user?.id != null) return Home();
-      else return Login();
+    } else {
+      if (user?.id != null)
+        return Home();
+      else
+        return Login();
     }
   }
 }

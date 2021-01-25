@@ -25,12 +25,6 @@ class _RegisterState extends State<Register> {
   ///register
   void register() async{
     if(_key.currentState.validate()){
-      print(email_inscription.text);
-      print(nom_inscription.text);
-      print(prenom_inscription.text);
-      print(numero_inscription.text);
-      print(password_inscription.text);
-
       final response = await AuthService.register(
           nom_inscription.text,prenom_inscription.text,
           email_inscription.text,numero_inscription.text,
@@ -39,7 +33,7 @@ class _RegisterState extends State<Register> {
         await UserModel.saveUser(UserModel.fromJson(response));
         registered = true;
         message = response["message"];
-        Navigator.of(context).push(MaterialPageRoute(builder: (g)=> Home()));
+        //Navigator.of(context).push(MaterialPageRoute(builder: (g)=> Home()));
         setState(() {});
       }else{
         registered = false;

@@ -13,134 +13,162 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   ///les TextEditingControllers sont des objets qui contiennent
   ///les valeurs des champs TextFormField
- TextEditingController email = new TextEditingController();
- TextEditingController password = new TextEditingController();
- final _key = GlobalKey<FormState>();
- String message = "";
- bool connected = false;
+  TextEditingController email = new TextEditingController();
+  TextEditingController password = new TextEditingController();
+  final _key = GlobalKey<FormState>();
+  String message = "";
+  bool connected = false;
 
- ///la fonction login appelle la fonction de L'api de connexion
- ///login
- void login() async{
-   if(_key.currentState.validate()){
-       final response =  await AuthService.login(email.text, password.text);
-       if(response["statut"]==1){
-         await UserModel.saveUser(UserModel.fromJson(response));
-         connected = true;
-         message = response["message"];
-         Navigator.of(context).push(MaterialPageRoute(builder: (g)=> Home()));
-         setState(() {});
-       }else{
-         connected = false;
-         message = response["message"];
-         setState(() {});
-       }
-   }
- }
+  ///la fonction login appelle la fonction de L'api de connexion
+  ///login
+  void login() async {
+    if (_key.currentState.validate()) {
+      final response = await AuthService.login(email.text, password.text);
+      if (response["statut"] == 1) {
+        await UserModel.saveUser(UserModel.fromJson(response));
+        connected = true;
+        message = response["message"];
+        Navigator.of(context).push(MaterialPageRoute(builder: (g) => Home()));
+        setState(() {});
+      } else {
+        connected = false;
+        message = response["message"];
+        setState(() {});
+      }
+    }
+  }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(44, 44, 44, 0.6),
       body: Center(
           child: SingleChildScrollView(
               child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Form(
-          key: _key,
-          child: Column(
-            children: [
-              Image(image: AssetImage('images/glogin.png'),width: 150,),
-              Card(
-                child: TextFormField(
-                  validator: (e)=>e.isEmpty?"Veuillez entrer l'email":null,
-                  controller: email,
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(15),
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 15),
-                        child: Icon(
-                          Icons.email,
-                          size: 30,
+                  padding: EdgeInsets.all(10.0),
+                  child: Form(
+                    key: _key,
+                    child: Column(
+                      children: [
+                        Image(
+                          image: AssetImage('images/glogin.png'),
+                          width: 150,
                         ),
-                      ),
-                      labelText: 'Email',
-                      hintText: "e-mail"),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ),
-              Card(
-                child: TextFormField(
-                  validator: (e)=>e.isEmpty?"Veuillez entrer le mot de passe":null,
-                  controller: password,
-                  style: TextStyle(fontSize: 20),
-                  obscureText: visible,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(15),
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 15),
-                        child: Icon(
-                          Icons.vpn_key,
-                          size: 30,
+                        Card(
+                          child: TextFormField(
+                            validator: (e) =>
+                                e.isEmpty ? "Veuillez entrer l'email" : null,
+                            controller: email,
+                            style: TextStyle(fontSize: 20),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(15),
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 15),
+                                  child: Icon(
+                                    Icons.email,
+                                    size: 30,
+                                  ),
+                                ),
+                                labelText: 'Email',
+                                hintText: "e-mail"),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
                         ),
-                      ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: IconButton(
-                          icon: visible ? FaIcon(FontAwesomeIcons.eye,size: 25,) : FaIcon(FontAwesomeIcons.eyeSlash,size: 25,) ,
-                          onPressed: toggle_password,
+                        Card(
+                          child: TextFormField(
+                            validator: (e) => e.isEmpty
+                                ? "Veuillez entrer le mot de passe"
+                                : null,
+                            controller: password,
+                            style: TextStyle(fontSize: 20),
+                            obscureText: visible,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(15),
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 15),
+                                  child: Icon(
+                                    Icons.vpn_key,
+                                    size: 30,
+                                  ),
+                                ),
+                                suffixIcon: Padding(
+                                    padding: const EdgeInsets.only(left: 20),
+                                    child: IconButton(
+                                      icon: visible
+                                          ? FaIcon(
+                                              FontAwesomeIcons.eye,
+                                              size: 25,
+                                            )
+                                          : FaIcon(
+                                              FontAwesomeIcons.eyeSlash,
+                                              size: 25,
+                                            ),
+                                      onPressed: toggle_password,
+                                    )),
+                                labelText: 'Password',
+                                hintText: "Mot de passe"),
+                            keyboardType: TextInputType.text,
+                          ),
+                        ),
+                        Text(
+                          "$message",
+                          style: TextStyle(
+                              color: connected
+                                  ? Colors.greenAccent
+                                  : Colors.redAccent),
+                        ),
+                        FlatButton(
+                            onPressed: () {},
+                            child: Text('Forgot password ?',
+                                style: TextStyle(
+                                    color: Colors.lightBlue,
+                                    fontWeight: FontWeight.bold))),
+                        SizedBox(
+                          height: 44,
+                          child: RaisedButton(
+                            onPressed: login,
+                            color: Colors.lightBlueAccent,
+                            child: Text(
+                              'Login',
+                              style:
+                                  TextStyle(fontSize: 19, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Avez-vous un compte?",
+                                style: TextStyle(
+                                    color: Colors.lightBlueAccent,
+                                    fontWeight: FontWeight.bold)),
+                            FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Register()));
+                                },
+                                child: Text('Sign up',
+                                    style: TextStyle(
+                                        color: Colors.lightBlueAccent,
+                                        fontWeight: FontWeight.bold))),
+                          ],
                         )
-                      ),
-                      labelText: 'Password',
-                      hintText: "Mot de passe"),
-                  keyboardType: TextInputType.text,
-                ),
-              ),
-              Text("$message", style: TextStyle(color: connected ? Colors.greenAccent : Colors.redAccent),),
-              FlatButton(
-                  onPressed: (){},
-                  child: Text('Forgot password ?',
-                      style: TextStyle(color: Colors.lightBlue,fontWeight: FontWeight.bold)
-                  )
-              ),
-              SizedBox(
-                height: 44,
-                child: RaisedButton(onPressed: login,
-                  color: Colors.lightBlueAccent,
-                  child: Text('Login',
-                    style: TextStyle(fontSize: 19, color: Colors.white),
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Avez-vous un compte?",
-                      style: TextStyle(color: Colors.lightBlueAccent,fontWeight: FontWeight.bold)),
-                  FlatButton(
-                      onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=>Register()
-                        ));
-                      },
-                      child: Text('Sign up',
-                          style: TextStyle(color: Colors.lightBlueAccent,fontWeight: FontWeight.bold)
-                      )
-                  ),
-                ],
-              )
-            ],
-          ),
-        )
-      ))),
+                      ],
+                    ),
+                  )))),
     );
   }
+
   bool visible = true;
- ///la fonction toggle_password permet de basculer l'icône
- ///de visibilité de mot de passe au clic
-  void toggle_password(){
-   visible = !visible;
-   setState(() {});
+
+  ///la fonction toggle_password permet de basculer l'icône
+  ///de visibilité de mot de passe au clic
+  void toggle_password() {
+    visible = !visible;
+    setState(() {});
   }
 }

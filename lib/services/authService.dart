@@ -12,7 +12,6 @@ class AuthService {
       "password_connexion" : password,
       "type" : type
     };
-    print(body);
     final response = await http.post(url,body: body);
     return jsonDecode(response.body);
   }
