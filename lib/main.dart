@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:http_requests/pages/login.dart';
 import 'package:http_requests/wrapper.dart';
 
 /*Future<Album> fetchAlbum() async {
@@ -61,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Fetch Data Example',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.orangeAccent,
       ),
       home: Wrapper(),
       /*Scaffold(
