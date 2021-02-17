@@ -1,6 +1,9 @@
 # http_requests
-
-A new Flutter application.
+# Odoo11
+# Odoo Sales Order Module
+# Ripcord PHP
+A new Flutter application. 
+In th OdooTest folder you can find a sample API for Odoo11 Sales Module
 
 ## Getting Started
 
