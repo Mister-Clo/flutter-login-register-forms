@@ -1,7 +1,8 @@
 <?php require_once("./ripcord-master/ripcord.php"); ?>
 
 
-<!DOCTYPE html>
+<!--FOR WEB VIEW
+  <!DOCTYPE html>
 <html>
 <head>
 	<link rel="shortcut icon" href="bars.png" type="image/x-icon">
@@ -33,13 +34,13 @@
 	</style>
 	<title>Odoo sales</title>
 </head>
-<body> 
+<body> -->
 
  <?php 
 $url = "http://localhost:8069";
-$db = "testodoo";
-$username = "tchoupouclotaire@gmail.com";
-$password = "odoo";
+$db = "database name";
+$username = "admin";
+$password = "password";
 
 $common = ripcord::client("$url/xmlrpc/2/common");
 $common->version();
@@ -104,7 +105,7 @@ echo "</p>";
 **Sales
 **/
 $order = $models->execute_kw($db, $uid, $password, 'sale.order', 'search_read', array(array(array('is_expired', '=', false)/*, array('name', '=', $name)*/)), array(
-                    'limit' => 200/*,
+                    'limit' => 200/*, /// if you wish to choose some fields, uncomment
                     'fields' => array(
                         'name',
                         'state',
@@ -116,7 +117,7 @@ $order = $models->execute_kw($db, $uid, $password, 'sale.order', 'search_read', 
 
         echo json_encode($order);
 
-/*
+/** WEB VIEW
 echo "<p><strong>Sales Order :</strong><br/>";
 echo "<table id='sales'>
 		<tr><th>Name</th><th>State</th><th>Date_order</th><th>SalesPerson</th><th>Amount $</th><th>Customer</th></tr>";
@@ -131,9 +132,9 @@ echo "<table id='sales'>
 				<td>".$sale['partner_id'][1]."</td>
 			  </tr>";
 	}
-echo "</p>";
+ echo "</p>";
 */
 
  ?>
-</body>
-</html>
+<!--</body>
+</html>-->
